@@ -1,12 +1,7 @@
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
 curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
 yum makecache
-#systemctl disable firewalld
-#systemctl stop firewalld
-#setenforce 0
-#vim /etc/sysconfig/selinux 
 yum install -y vim
-#set -o vi
 cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
@@ -32,7 +27,6 @@ yum install -y yum-utils
 
 yum install -y docker-ce docker-ce-cli containerd.io
 
-#docker --version
 cat <<EOF > /etc/docker/daemon.json 
 {
  "registry-mirrors": ["https://frz7i079.mirror.aliyuncs.com"]
@@ -54,3 +48,4 @@ for name in $images_list; do
      docker tag registry.cn-hangzhou.aliyuncs.com/google_containers/$imageName k8s.gcr.io/$imageName
      docker rmi registry.cn-hangzhou.aliyuncs.com/google_containers/$imageName
 done
+
