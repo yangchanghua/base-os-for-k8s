@@ -1,10 +1,6 @@
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
 curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
-docker_version="19.03.13-3.el7"
-containerd_version="1.3.7-3.1.el7"
-kube_version="1.19.3-0"
-yum makecache
-yum install -y vim
+
 cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
@@ -26,9 +22,11 @@ yum-config-manager \
     --add-repo \
         https://download.docker.com/linux/centos/docker-ce.repo
 
+yum makecache
+yum install -y vim
 yum install -y yum-utils
 
-yum install -y docker-ce-$docker_version docker-ce-cli-$docker_version containerd.io-$containerd_version
+yum install -y docker-ce docker-ce-cli containerd.io
 
 cat <<EOF > /etc/docker/daemon.json 
 {
@@ -41,6 +39,8 @@ systemctl enable docker
 systemctl start docker
 systemctl status docker
 
+containerd_version="1.3.7-3.1.el7"
+kube_version="1.19.3-0"
 yum install -y kubelet-$kube_version kubeadm-$kube_version kubectl-$kube_version --disableexcludes=kubernetes
 
 images_list=$(kubeadm config images list 2> /dev/null)
