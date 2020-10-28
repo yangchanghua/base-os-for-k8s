@@ -1,5 +1,9 @@
-mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
-curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
+cp /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
+sudo sed -e 's|^mirrorlist=|#mirrorlist=|g' \
+         -e 's|^#baseurl=http://mirror.centos.org/centos|baseurl=https://mirrors.ustc.edu.cn/centos|g' \
+                  -i.bak \
+                           /etc/yum.repos.d/CentOS-Base.repo
+#curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
 
 cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
@@ -20,7 +24,7 @@ EOF
 sysctl -p /etc/sysctl.d/k8s.conf
 yum-config-manager \
     --add-repo \
-        https://download.docker.com/linux/centos/docker-ce.repo
+    https://mirrors.ustc.edu.cn/docker-ce/linux/centos/docker-ce.repo
 
 yum makecache
 yum install -y vim
@@ -30,7 +34,7 @@ yum install -y docker-ce docker-ce-cli containerd.io
 
 cat <<EOF > /etc/docker/daemon.json 
 {
- "registry-mirrors": ["https://frz7i079.mirror.aliyuncs.com"]
+    "registry-mirrors": ["https://docker.mirrors.ustc.edu.cn"]
 }
 EOF
 
