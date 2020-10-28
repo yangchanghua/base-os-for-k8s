@@ -24,7 +24,7 @@ EOF
 sysctl -p /etc/sysctl.d/k8s.conf
 yum-config-manager \
     --add-repo \
-    https://mirrors.ustc.edu.cn/docker-ce/linux/centos/docker-ce.repo
+    https://download.docker.com/linux/centos/docker-ce.repo
 
 yum makecache
 yum install -y vim
@@ -32,6 +32,9 @@ yum install -y yum-utils
 
 yum install -y docker-ce docker-ce-cli containerd.io
 
+if [ ! -d /etc/docker ];then
+    mkdir /etc/docker
+fi
 cat <<EOF > /etc/docker/daemon.json 
 {
     "registry-mirrors": ["https://docker.mirrors.ustc.edu.cn"]
